@@ -2,20 +2,20 @@
 #include <iomanip>
 #include <string>
 #include <math.h>
-#include "Header1.h"
+#include "Header.h"
 using namespace std;
 
 People::People()
 {
 	this->name = "Name";
-	int** Days = new int* [5];
-	for (int i = 0; i < 5; i++)
+	int** Days = new int* [1];
+	for (int i = 0; i < 1; i++)
 	{
-		Days[i] = new int[31];
+		Days[i] = new int[3];
 	}
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 1; i++)
 	{
-		for (int j = 0; j < 31; j++)
+		for (int j = 0; j < 3; j++)
 		{
 			Days[i][j] = 0;
 		}
@@ -183,7 +183,7 @@ int People::Delete(int** Days, int* Mi, int k)
 	return day;
 }
 
-Doctor::Doctor(string name1, string name2, string name3, int Ashift, int Bshift, int Cshift)
+Staff::Staff(string name1, string name2, string name3, int Ashift, int Bshift, int Cshift)
 {
 	A.SetName(name1);
 	B.SetName(name2);
@@ -199,7 +199,7 @@ Client::Client(string name, int number)
 	this->number = number;
 }
 
-int Doctor::FindShift(int New, int month, int Doctor)
+int Staff::FindShift(int New, int month, int Doctor)
 {
 	int shift;
 	if (Doctor == 1)
@@ -223,7 +223,7 @@ int Doctor::FindShift(int New, int month, int Doctor)
 	return shift;
 }
 
-void Doctor::FindDay(int Doctor, int data)
+void Staff::FindDay(string Doctor, int data)
 {
 	int day = 31;
 	int** Days = new int* [5];
@@ -231,17 +231,17 @@ void Doctor::FindDay(int Doctor, int data)
 	{
 		Days[i] = new int[day];
 	}
-	if (Doctor == 1)
+	if (Doctor == A.GetName())
 	{
 		Days = A.GetTimetable();
 		day = A.GetDay();
 	}
-	if (Doctor == 2)
+	if (Doctor == B.GetName())
 	{
 		Days = B.GetTimetable();
 		day = B.GetDay();
 	}
-	if (Doctor == 3)
+	if (Doctor == C.GetName())
 	{
 		Days = C.GetTimetable();
 		day = C.GetDay();
@@ -268,7 +268,7 @@ void Doctor::FindDay(int Doctor, int data)
 	cout << endl;
 }
 
-bool Doctor::CheckDay(int data)
+bool Staff::CheckDay(int data)
 {
 	int check = false;
 	int** Days = A.GetTimetable();
@@ -281,14 +281,14 @@ bool Doctor::CheckDay(int data)
 	return check;
 }
 
-void Doctor::coutPerson()
+void Staff::coutPerson()
 {
 	cout << "1. " << A.GetName() << endl;
 	cout << "2. " << B.GetName() << endl;
 	cout << "3. " << C.GetName() << endl;
 }
 
-string Doctor::FindPerson(int choice)
+string Staff::FindPerson(int choice)
 {
 	string name;
 	if (choice == 1)
@@ -306,7 +306,7 @@ string Doctor::FindPerson(int choice)
 	return name;
 }
 
-void Doctor::ChangeTimetable(int Doctor, int time, int data)
+void Staff::ChangeTimetable(int Doctor, int time, int data)
 {
 	int day = 31;
 	int** Days = new int* [5];
@@ -367,6 +367,20 @@ void Doctor::ChangeTimetable(int Doctor, int time, int data)
 	}
 }
 
+bool Staff::FindDoctor(string name)
+{
+	bool find;
+	if (name == A.GetName() || name == B.GetName() || name == C.GetName())
+	{
+		find = true;
+	}
+	else
+	{
+		find = false;
+	}
+	return find;
+};
+
 Client::Client()
 {
 	this->name = "Name";
@@ -396,65 +410,11 @@ int Client::GetClientNum()
 	return number;
 }
 
-string Client::FindPerson(int choice)
-{
-	string doctor;
-	if (choice == 1)
-	{
-		doctor = "Лор";
-	}
-	if (choice == 2)
-	{
-		doctor = "Стоматолог";
-	}
-	if (choice == 3)
-	{
-		doctor = "Хірург";
-	}
-	if (choice == 4)
-	{
-		doctor = "Дерматолог";
-	}
-	if (choice == 5)
-	{
-		doctor = "Дієтолог";
-	}
-	if (choice == 6)
-	{
-		doctor = "Кардіолог";
-	}
-	if (choice == 7)
-	{
-		doctor = "Нерволог";
-	}
-	if (choice == 8)
-	{
-		doctor = "Ортопед";
-	}
-	if (choice == 9)
-	{
-		doctor = "Педіатр";
-	}
-	if (choice == 10)
-	{
-		doctor = "Психіатр";
-	}
-	if (choice == 11)
-	{
-		doctor = "Терапевт";
-	}
-	if (choice == 12)
-	{
-		doctor = "Окуліст";
-	}
-	return doctor;
-}
-
-void Client::NewClient(int New, string doctor, int choice, int data, int month, int time)
+void Client::NewClient(int New, string doctor, int data, int month, int time)
 {
 	int quantity = 20;
 	string** Card = this->Cards;
-	Card[New][0] = GetClientName();
+	Card[New][0] = "Клієнт: " + GetClientName();
 	Card[New][1] = "Номер телефону: 380" + to_string(GetClientNum());
 	Card[New][2] = "Лікар: " + doctor;
 	if (month < 10)
@@ -462,7 +422,7 @@ void Client::NewClient(int New, string doctor, int choice, int data, int month, 
 	else
 		Card[New][3] = "Дата прийому: " + to_string(data) + "." + to_string(month);
 	Card[New][4] = "Час прийому: " + to_string(time) + ":00";
-	Card[New][5] = "Діагноз: " + Diagnosis(choice);
+	Card[New][5] = "Діагноз: ";
 	this->Cards = Card;
 }
 
@@ -476,10 +436,9 @@ void Client::coutPerson()
 	cout << "====================================================================" << endl;
 	for (int i = 0; i < 20; i++)
 	{
-		if (Card[i][0] == name)
+		if (Card[i][0] == ("Клієнт: " + name))
 		{
-			cout << endl << "Клієнт: " << Card[i][0] << endl;
-			for (int j = 1; j <= 6; j++)
+			for (int j = 0; j < 6; j++)
 			{
 				cout << Card[i][j] << endl;
 			}
@@ -488,119 +447,51 @@ void Client::coutPerson()
 	cout << "====================================================================" << endl;
 }
 
-string Client::Diagnosis(int choice)
+bool Client::FindClient(string name)
 {
-	srand(time(NULL));
-	string doctor = FindPerson(choice);
-	string diagnosis;
-	int N = rand() % (3 - 1 + 1) + 1;
-	if (doctor == "Лор")
+	bool check = true;;
+	string** Card = this->Cards;
+	cout << "====================================================================" << endl;
+	for (int i = 0; i < 20; i++)
 	{
-		if (N == 1)
-			diagnosis = "Хронічний тонзиліт";
-		if (N == 2)
-			diagnosis = "Хронічний синусит";
-		if (N == 3)
-			diagnosis = "Деформація зовнішнього носа";
+		if (Card[i][2] == ("Лікар: " + name))
+		{
+			for (int j = 0; j < 5; j++)
+			{
+				cout << Card[i][j] << endl;
+			}
+		}
+		else
+		{
+			check = false;
+		}
 	}
-	if (doctor == "Стоматолог")
-	{
-		if (N == 1)
-			diagnosis = "Анатомічна форма зуба";
-		if (N == 2)
-			diagnosis = "Біомеханіка нижньої щелепи";
-		if (N == 3)
-			diagnosis = "Вкладка-пломба";
-	}
-	if (doctor == "Хірург")
-	{
-		if (N == 1)
-			diagnosis = "Грижі передньої черевної стінки";
-		if (N == 2)
-			diagnosis = "Ахалазія стравоходу і кардії";
-		if (N == 3)
-			diagnosis = "Виразкова хвороба шлунка та дванадцятипалої кишки";
-	}
-	if (doctor == "Дерматолог")
-	{
-		if (N == 1)
-			diagnosis = "Вугрі і контагіозний молюск";
-		if (N == 2)
-			diagnosis = "Дерматит і екзема";
-		if (N == 3)
-			diagnosis = "Мікоз і короста";
-	}
-	if (doctor == "Дієтолог")
-	{
-		if (N == 1)
-			diagnosis = "Алергія та порушення апетиту";
-		if (N == 2)
-			diagnosis = "Гіповітаміноз";
-		if (N == 3)
-			diagnosis = "Захворювання шлунково-кишкового тракту";
-	}
-	if (doctor == "Кардіолог")
-	{
-		if (N == 1)
-			diagnosis = "Ішемічна хвороба серця";
-		if (N == 2)
-			diagnosis = "Артеріальна гіпертензія";
-		if (N == 3)
-			diagnosis = "Порушення серцевого ритму";
-	}
-	if (doctor == "Нерволог")
-	{
-		if (N == 1)
-			diagnosis = "Артроз суглобів";
-		if (N == 2)
-			diagnosis = "Запалення головного мозку";
-		if (N == 3)
-			diagnosis = "Хвороба Паркінсона";
-	}
-	if (doctor == "Ортопед")
-	{
-		if (N == 1)
-			diagnosis = "Діабетична артопатія";
-		if (N == 2)
-			diagnosis = "Остеохондроз";
-		if (N == 3)
-			diagnosis = "Клишоногість та викривлення стоп";
-	}
-	if (doctor == "Педіатр")
-	{
-		if (N == 1)
-			diagnosis = "Пневмонія";
-		if (N == 2)
-			diagnosis = "Кишкова інфекція";
-		if (N == 3)
-			diagnosis = "Бронхіальна астма";
-	}
-	if (doctor == "Психіатр")
-	{
-		if (N == 1)
-			diagnosis = "Симптоматичні і органічні психічні розлади";
-		if (N == 2)
-			diagnosis = "Розумова відсталість";
-		if (N == 3)
-			diagnosis = "Розлади психічного розвитку";
-	}
-	if (doctor == "Терапевт")
-	{
-		if (N == 1)
-			diagnosis = "Двобічне запалення легенів";
-		if (N == 2)
-			diagnosis = "COVID-19";
-		if (N == 3)
-			diagnosis = "Гостра респіраторна-вірусна інфекція";
-	}
-	if (doctor == "Окуліст")
-	{
-		if (N == 1)
-			diagnosis = "Короткозорість";
-		if (N == 2)
-			diagnosis = "Катаракта";
-		if (N == 3)
-			diagnosis = "Косоокість";
-	}
-	return diagnosis;
+	cout << "====================================================================" << endl;
+	return check;
 }
+
+void Client::Diagnosis(string name)
+{
+	string diagnosis, client;
+	string** Card = this->Cards;
+	cout << "Введіть прізвище та ім'я кліента: ";
+	cin.ignore();
+	getline(cin, client);
+	cout << "====================================================================" << endl;
+	for (int i = 0; i < 20; i++)
+	{
+		if (Card[i][2] == ("Лікар: " + name) && Card[i][0] == ("Клієнт: " + client))
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				cout << Card[i][j] << endl;
+			}
+			cout << "Діагноз: ";
+			cin.ignore();
+			getline(cin, diagnosis);
+		}
+		this->Cards[i][5] = "Діагноз: " + diagnosis;
+	}
+	cout << "====================================================================" << endl;
+}
+
